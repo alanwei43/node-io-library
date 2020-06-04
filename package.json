@@ -1,0 +1,31 @@
+{
+  "name": "node-io-library",
+  "version": "1.0.0",
+  "description": "node IO library.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev src/bin/node-io.ts",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanwei43/node-io-library.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alanwei43/node-io-library/issues"
+  },
+  "homepage": "https://github.com/alanwei43/node-io-library#readme",
+  "dependencies": {
+    "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^11.11.4",
+    "@types/yargs": "^15.0.4",
+    "ts-node": "^8.0.3",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^3.3.4000"
+  }
+}
