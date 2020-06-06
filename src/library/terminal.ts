@@ -39,12 +39,12 @@ export enum TEXT_STYLE {
 }
 
 export class TerminalColor {
-  private _output: (msg: string) => void
+  private _output: (format: string, msg: string) => void
   private _foreColor: COLOR_FOREGROUND
   private _bgColor: COLOR_BACKGROUND
   private _textStyle: TEXT_STYLE
-  constructor(output?: (msg: string) => void) {
-    this._output = output || (msg => process.stdout.write(msg));
+  constructor(output?: (format: string, msg: string) => void) {
+    this._output = output || ((format, msg) => process.stdout.write(format + msg));
   }
   color(color: COLOR_FOREGROUND) {
     this._foreColor = color;
@@ -59,7 +59,7 @@ export class TerminalColor {
     return this;
   }
   write(text: string) {
-    this._output(getStyle(this._foreColor, this._textStyle, this._bgColor) + text);
+    this._output(getStyle(this._foreColor, this._textStyle, this._bgColor), text);
     return this;
   }
   reset() {
@@ -70,7 +70,7 @@ export class TerminalColor {
     return this;
   }
   newline() {
-    this._output("\n");
+    this._output("\n", "");
   }
 }
 
