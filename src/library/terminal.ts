@@ -71,6 +71,7 @@ export class TerminalColor {
   }
   newline() {
     this._output("\n", "");
+    return this;
   }
 }
 

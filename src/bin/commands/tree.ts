@@ -41,12 +41,12 @@ export const handler = function (argv: any) {
     }
   }).filter(item => item.stat.isFile()).forEach(item => {
     const itemPath = item.path.substr(baseDir.length + 1);
-    Terminal.reset()
+    Terminal
     .write(`  ${itemPath}`)
     .color(COLOR_FOREGROUND.Green)
     .bg(COLOR_BACKGROUND.White)
     .write(` (${humanSize(item.stat.size).join(" ")})`)
-    .newline();
+    .newline()
+    .reset();
   });
-  Terminal.reset();
 }
