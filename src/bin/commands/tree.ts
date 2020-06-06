@@ -1,4 +1,4 @@
-import { recursiveFiles } from "../../library";
+import { recursiveFiles, humanSize, Terminal, COLOR_FOREGROUND, COLOR_BACKGROUND } from "../../library";
 import path from "path";
 import { Options } from "yargs";
 
@@ -16,18 +16,36 @@ export const builder: { [key: string]: Options } = {
     describe: "是否递归"
   },
   ignore: {
-    default: "node_modules|\\.git"
+    // default: "node_modules|\\.git"
+    required: false
+  },
+  include: {
+    // default: ".*"
+    required: false
   }
 };
 export const handler = function (argv: any) {
   const baseDir = path.resolve(argv.dir);
-  // console.log(`${argv.recursive ? "递归" : ""}列出${baseDir}目录下文件`);
+  console.warn(`${baseDir}${argv.recursive ? "/*" : ""}`);
 
   recursiveFiles(argv.dir, {
     recursive: argv.recursive,
-    filter: item => !new RegExp(argv.ignore).test(item.path)
-  }).forEach(item => {
-    const path = item.path.substr(baseDir.length);
-    console.log(`${path}(${item.stat.size})`);
+    filter: item => {
+      if (argv.ignore && new RegExp(argv.ignore, "i").test(item.path)) {
+        return false;
+      }
+      if (argv.include) {
+        return new RegExp(argv.include, "i").test(item.path);
+      }
+      return true;
+    }
+  }).filter(item => item.stat.isFile()).forEach(item => {
+    const itemPath = item.path.substr(baseDir.length + 1);
+    Terminal.reset()
+    .write(`  ${itemPath}`)
+    .color(COLOR_FOREGROUND.Green)
+    .bg(COLOR_BACKGROUND.White)
+    .write(` (${humanSize(item.stat.size).join(" ")})`)
+    .newline();
   });
 }

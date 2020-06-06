@@ -4,7 +4,8 @@
   "description": "node IO library.",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev src/bin/node-io.ts",
+    "start": "ts-node src/bin/node-io.ts",
+    "test:tree": "ts-node src/bin/node-io.ts tree",
     "build": "tsc"
   },
   "bin": "dist/bin/node-io.js",

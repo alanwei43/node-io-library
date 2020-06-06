@@ -9,6 +9,7 @@
       "outDir": "dist",
       "baseUrl": ".",
       "resolveJsonModule": true,
+      "noImplicitUseStrict": true,
       "paths": {
           "*": [
               "node_modules/*",
