@@ -48,4 +48,5 @@ export const handler = function (argv: any) {
     .write(` (${humanSize(item.stat.size).join(" ")})`)
     .newline();
   });
+  Terminal.reset();
 }
