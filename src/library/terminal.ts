@@ -3,7 +3,7 @@ function getStyle(color?: number, format?: number, backgroundColor?: number): st
   const styles = [backgroundColor || "", format || "", color || ""].join(";");
   return ["\033[", styles, "m"].join("");
 }
-function doReset() {
+function getReset(): string {
   return "\033[0m";
 }
 
@@ -66,7 +66,7 @@ export class TerminalColor {
     this._foreColor = null;
     this._bgColor = null;
     this._textStyle = null;
-    doReset();
+    this._output(getReset(), "");
     return this;
   }
   newline() {
