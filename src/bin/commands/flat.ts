@@ -3,17 +3,13 @@ import path from "path";
 import { Options } from "yargs";
 import fs from "fs";
 
-/**
- * flat src/ target/ --hash-name
- * flat src/ target/ --ignore-repeat-file
- * --report 
- */
+
 export const command = "flat [source] [target]";
-export const desc = "将source目录下的文件展开复制到target目录下";
+export const desc = "将source目录下的文件展开复制到target根目录下";
 export const builder: { [key: string]: Options } = {
   source: {
     required: true,
-    description: "源文件目录"
+    description: "源目录"
   },
   target: {
     required: false,
@@ -29,7 +25,7 @@ export const builder: { [key: string]: Options } = {
     type: "string",
     required: false,
     default: false,
-    describe: "报告输出文件地址"
+    describe: "报告文件输出地址"
   },
   verbose: {
     type: "boolean",

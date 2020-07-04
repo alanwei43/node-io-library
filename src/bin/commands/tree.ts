@@ -1,9 +1,8 @@
 import { recursiveDir, humanSize, Terminal, COLOR_FOREGROUND, COLOR_BACKGROUND, hashFile } from "../../library";
-import path from "path";
 import { Options } from "yargs";
 
 export const command = "tree [dir]";
-export const desc = "目录树";
+export const desc = "递归列出dir目录下文件";
 export const builder: { [key: string]: Options } = {
   dir: {
     default: "./",
@@ -12,7 +11,7 @@ export const builder: { [key: string]: Options } = {
   recursive: {
     type: "boolean",
     default: true,
-    describe: "是否递归"
+    describe: "是否递归子目录"
   },
   dirFilter: {
     type: "string",
@@ -27,7 +26,7 @@ export const builder: { [key: string]: Options } = {
   hash: {
     type: "boolean",
     required: false,
-    describe: "是否输出文件的 hash"
+    describe: "是否输出文件的Hash值"
   },
   verbose: {
     type: "boolean",
