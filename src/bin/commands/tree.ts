@@ -1,52 +1,88 @@
-import { recursiveFiles, humanSize, Terminal, COLOR_FOREGROUND, COLOR_BACKGROUND } from "../../library";
+import { recursiveDir, humanSize, Terminal, COLOR_FOREGROUND, COLOR_BACKGROUND, hashFile } from "../../library";
 import path from "path";
 import { Options } from "yargs";
 
 export const command = "tree [dir]";
-export const desc = "列出目录树";
+export const desc = "目录树";
 export const builder: { [key: string]: Options } = {
   dir: {
     default: "./",
-    alias: "d",
     describe: "目录"
   },
   recursive: {
+    type: "boolean",
     default: true,
-    alias: "r",
     describe: "是否递归"
   },
-  ignore: {
-    // default: "node_modules|\\.git"
-    required: false
+  dirFilter: {
+    type: "string",
+    required: false,
+    describe: "目录过滤(正则表达式)"
   },
-  include: {
-    // default: ".*"
-    required: false
+  fileFilter: {
+    type: "string",
+    required: false,
+    describe: "文件过滤(正则表达式)"
+  },
+  hash: {
+    type: "boolean",
+    required: false,
+    describe: "是否输出文件的 hash"
+  },
+  verbose: {
+    type: "boolean",
+    required: false,
+    default: false,
+    describe: "是否输出调试信息"
   }
 };
-export const handler = function (argv: any) {
-  const baseDir = path.resolve(argv.dir);
-  console.warn(`${baseDir}${argv.recursive ? "/*" : ""}`);
+export const handler = function (argv: { dir: string, recursive: boolean, fileFilter: string, dirFilter: string, hash: boolean, verbose: boolean }) {
+  argv.verbose && Terminal.writeln("输入参数: ")
+    .writeln(JSON.stringify(argv, null, "  "), COLOR_FOREGROUND.Yellow)
+    .newline()
+    .reset();
 
-  recursiveFiles(argv.dir, {
+  const allFiles = recursiveDir(argv.dir, {
     recursive: argv.recursive,
-    filter: item => {
-      if (argv.ignore && new RegExp(argv.ignore, "i").test(item.path)) {
-        return false;
+    dirFilter: f => {
+      if (typeof argv.dirFilter === "string" && argv.dirFilter.length) {
+        const pass = (new RegExp(argv.dirFilter, "i")).test(f);
+        argv.verbose && Terminal.color(pass ? COLOR_FOREGROUND.Green : COLOR_FOREGROUND.Yellow)
+          .write(`${pass ? "通过" : "忽略"} `)
+          .writeln(f)
+          .reset();
+        return pass;
       }
-      if (argv.include) {
-        return new RegExp(argv.include, "i").test(item.path);
+      return true;
+    },
+    fileFilter: f => {
+      if (typeof argv.fileFilter === "string" && argv.fileFilter.length) {
+        const pass = (new RegExp(argv.fileFilter, "i")).test(f);
+        argv.verbose && Terminal.color(pass ? COLOR_FOREGROUND.Green : COLOR_FOREGROUND.Yellow)
+          .write(`${pass ? "通过" : "忽略"} `)
+          .writeln(f)
+          .reset();
+        return pass;
       }
       return true;
     }
-  }).filter(item => item.stat.isFile()).forEach(item => {
-    const itemPath = item.path.substr(baseDir.length + 1);
-    Terminal
-    .write(`  ${itemPath}`)
-    .color(COLOR_FOREGROUND.Green)
-    .bg(COLOR_BACKGROUND.White)
-    .write(` (${humanSize(item.stat.size).join(" ")})`)
-    .newline()
-    .reset();
-  });
+  }).filter(item => item.stat.isFile());
+  const promises = argv.hash ? Promise.all(allFiles.map(f => hashFile(f.path).then(hashValue => ({
+    hash: hashValue,
+    file: f
+  })))) : Promise.resolve(allFiles.map(f => ({
+    hash: null,
+    file: f
+  })));
+  promises.then(all => {
+    all.forEach(({ file, hash }) => {
+      Terminal
+        .write(hash ? `[${hash}] ` : null, COLOR_FOREGROUND.Green)
+        .reset()
+        .write(file.path)
+        .writeln(` (${humanSize(file.stat.size).join(" ")})`, COLOR_FOREGROUND.Green, COLOR_BACKGROUND.White)
+        .reset();
+    });
+  })
+
 }

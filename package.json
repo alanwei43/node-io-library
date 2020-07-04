@@ -1,14 +1,21 @@
 {
-  "name": "node-io-library",
-  "version": "1.0.0",
-  "description": "node IO library.",
+  "name": "@js-core/node-io-library",
+  "version": "0.0.3",
+  "description": "Node IO library.",
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/bin/node-io.ts",
-    "test:tree": "ts-node src/bin/node-io.ts tree",
-    "build": "tsc"
+    "tree": "ts-node src/bin/node-io.ts tree src --hash --verbose",
+    "tree:help": "ts-node src/bin/node-io.ts tree --help",
+    "flat": "ts-node src/bin/node-io.ts flat dist/ logs/ --report --output logs/flat.log --verbose",
+    "flat:copy": "ts-node src/bin/node-io.ts flat dist/ logs/ --output logs/flat.log --verbose",
+    "flat:help": "ts-node src/bin/node-io.ts flat --help",
+    "build": "tsc",
+    "pub": "tsc && npm publish --access public"
   },
-  "bin": "dist/bin/node-io.js",
+  "bin": {
+    "node-io": "dist/bin/node-io.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alanwei43/node-io-library.git"
@@ -21,13 +28,13 @@
   },
   "homepage": "https://github.com/alanwei43/node-io-library#readme",
   "dependencies": {
-    "yargs": "^15.3.1"
+    "yargs": "15.3.1"
   },
   "devDependencies": {
-    "@types/node": "^11.11.4",
-    "@types/yargs": "^15.0.4",
-    "ts-node": "^8.0.3",
-    "ts-node-dev": "^1.0.0-pre.32",
-    "typescript": "^3.3.4000"
+    "@types/node": "11.11.4",
+    "@types/yargs": "15.0.4",
+    "ts-node": "8.0.3",
+    "ts-node-dev": "1.0.0-pre.32",
+    "typescript": "3.3.4000"
   }
 }

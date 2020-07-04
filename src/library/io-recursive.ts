@@ -3,19 +3,37 @@ import fs from "fs";
 import { promisify } from "util";
 
 export interface FileInfo {
+  /**
+   * 文件地址
+   */
   path: string,
+  /**
+   * 文件状态
+   */
   stat: fs.Stats
 }
 export interface RecursiveOptions {
-  maxDepth?: number,
+  /**
+   * 是否递归子目录
+   */
   recursive?: boolean,
-  deepFirst?: boolean, // 是否是深度优先
-  filter?: (info: FileInfo) => boolean
+  /**
+   * 是否深度优先
+   */
+  deepFirst?: boolean,
+  /**
+   * 目录过滤
+   */
+  dirFilter?: (dir: string) => boolean,
+  /**
+   * 文件过滤
+   */
+  fileFilter?: (file: string) => boolean
 }
-export function recursiveFiles(dir: string, options?: RecursiveOptions): Array<FileInfo> {
+
+export function recursiveDir(rootDir: string, options?: RecursiveOptions): Array<FileInfo> {
   const files: Array<FileInfo> = [];
 
-  const rootDir = path.resolve(dir);
   if (!fs.existsSync(rootDir)) {
     return files;
   }
@@ -24,18 +42,25 @@ export function recursiveFiles(dir: string, options?: RecursiveOptions): Array<F
     path: rootDir,
     stat: dirStat
   });
-  doList(files, path.resolve(rootDir), options);
+  doList(files, rootDir, options);
   return files;
 }
 function doList(list: Array<FileInfo>, dir: string, options: RecursiveOptions) {
-  const filterFn = options.filter || (() => true);
-
   const files = fs.readdirSync(dir)
     .map(f => path.join(dir, f))
     .map(f => ({
       stat: fs.statSync(f),
       path: f
-    })).filter(filterFn);
+    }))
+    .filter(f => {
+      if (f.stat.isDirectory() && typeof options.dirFilter === "function") {
+        return options.dirFilter(f.path);
+      }
+      if (f.stat.isFile() && typeof options.fileFilter === "function") {
+        return options.fileFilter(f.path);
+      }
+      return true;
+    });
 
   if (options.deepFirst) {
     if (options.recursive) {

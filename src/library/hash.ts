@@ -2,7 +2,7 @@ import crypto from "crypto";
 import fs from "fs";
 import { promisify } from "util";
 import { EventEmitter } from "events";
-import { RecursiveOptions, recursiveFiles } from "./io-recursive";
+import { RecursiveOptions, recursiveDir } from "./io-recursive";
 
 export interface HashFileOptions {
   chunkSize?: number
@@ -29,9 +29,9 @@ export function hashFile(filePath: string, options?: HashFileOptions): Promise<s
   }).catch(() => null);
 }
 
-export function hashFiles(dir: string, options: { hash?: HashFileOptions, recursive?: RecursiveOptions }) {
+export function hashFiles(dir: string, options: { hash?: HashFileOptions, recursive?: RecursiveOptions }) : EventEmitter {
   const hub = new EventEmitter();
-  recursiveFiles(dir, options?.recursive)
+  recursiveDir(dir, options?.recursive)
     .filter(file => file.stat.isFile())
     .reduce((prev, file) => {
       return prev.then(() => {

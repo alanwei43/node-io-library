@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 
 function getStyle(color?: number, format?: number, backgroundColor?: number): string {
   const styles = [backgroundColor || "", format || "", color || ""].join(";");
@@ -39,12 +41,26 @@ export enum TEXT_STYLE {
 }
 
 export class TerminalColor {
-  private _output: (format: string, msg: string) => void
   private _foreColor: COLOR_FOREGROUND
   private _bgColor: COLOR_BACKGROUND
   private _textStyle: TEXT_STYLE
-  constructor(output?: (format: string, msg: string) => void) {
-    this._output = output || ((format, msg) => process.stdout.write(format + msg));
+  private _userOutputFn: (format: string, msg: string) => void
+  private _userOutputFile: string
+  constructor(output?: ((format: string, msg: string) => void) | string) {
+    if (typeof output === "function") {
+      this._userOutputFn = output;
+    }
+    if (typeof output == "string") {
+      if (!fs.existsSync(output)) {
+        fs.mkdirSync(path.dirname(output), {
+          recursive: true
+        });
+        fs.createWriteStream(output, {
+          encoding: "utf-8"
+        }).close();
+      }
+      this._userOutputFile = output;
+    }
   }
   color(color: COLOR_FOREGROUND) {
     this._foreColor = color;
@@ -58,8 +74,22 @@ export class TerminalColor {
     this._textStyle = style;
     return this;
   }
-  write(text: string) {
+  write(text: string, fg?: COLOR_FOREGROUND, bg?: COLOR_BACKGROUND) {
+    if (typeof text !== "string") {
+      return this;
+    }
+    if (fg) {
+      this.color(fg);
+    }
+    if (bg) {
+      this.bg(bg);
+    }
     this._output(getStyle(this._foreColor, this._textStyle, this._bgColor), text);
+    return this;
+  }
+  writeln(text: string, fg?: COLOR_FOREGROUND, bg?: COLOR_BACKGROUND) {
+    this.write(text, fg, bg);
+    this.newline();
     return this;
   }
   reset() {
@@ -70,8 +100,20 @@ export class TerminalColor {
     return this;
   }
   newline() {
-    this._output("\n", "");
+    this._output("", "\n");
     return this;
+  }
+  private _output(format: string, msg: string): void {
+    if (this._userOutputFn) {
+      this._userOutputFn(format, msg);
+      return;
+    }
+    if (this._userOutputFile && fs.existsSync(this._userOutputFile)) {
+      fs.appendFileSync(this._userOutputFile, msg, {
+        encoding: "utf-8"
+      });
+    }
+    process.stdout.write(format + msg, "utf-8");
   }
 }
 
