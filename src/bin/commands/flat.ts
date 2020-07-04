@@ -74,22 +74,30 @@ export const handler = function (argv: { source: string, target: string, output:
     argv.verbose && Terminal.writeln(`${data.hash} <- ${srcFile.name} `);
   });
   hashResults.on("end", () => {
-    Terminal.writeln(`[${argv.source}] 内文件 Hash 计算完成`).writeln("开始输出报告...");
+    /**
+     * 数量计算
+     */
+    let filesCount = 0, repeatCount = 0, repeatFilesCount = 0;
+    filesKeyByHash.forEach((val, key) => {
+      filesCount += val.length;
+      if (val.length > 1) {
+        repeatCount += 1;
+        repeatFilesCount += val.length;
+      }
+    });
+
+    Terminal.writeln(`[${argv.source}] 内文件 Hash 计算完成(总共${filesCount}个文件)`).writeln("开始输出报告...");
 
     if (filesKeyByHash.size === 0) {
       Terminal.writeln("No files").reset();
       return;
     }
-    let onlyReport = false;
-    if (typeof argv.target !== "string" || argv.target.length === 0) {
-      onlyReport = true;
-    }
 
-    if (onlyReport) {
+    (function () {
       /**
-       * 仅打印重复文件报告
+       * 打印报告
        */
-      Terminal.newline().writeln(`文件内容重复 ${Array.from(filesKeyByHash.values()).filter(f => f.length > 1).length}: `);
+      Terminal.newline().writeln(`文件内容重复 (共${repeatCount}个文件有重复文件, 总重复文件数量为 ${repeatFilesCount - repeatCount}): `);
       for (let [hash, repeatdFiles] of filesKeyByHash) {
         if (repeatdFiles.length === 1) {
           argv.verbose && Terminal.writeln(`[${hash}] ${repeatdFiles[0].path} 没有重复`)
@@ -116,8 +124,14 @@ export const handler = function (argv: { source: string, target: string, output:
             .writeln(`${repeatdFiles.map(f => f.relative || f.path).join("\n  ")}`);
         }
       }
+    })();
+    if (typeof argv.target !== "string" || argv.target.length === 0) {
+      /**
+       * 如果没有目标目录, 仅打印重复文件报告.
+       */
       return;
     }
+
     /**
       * 执行文件拷贝
       */
