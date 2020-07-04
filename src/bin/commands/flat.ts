@@ -13,13 +13,7 @@ export const builder: { [key: string]: Options } = {
   },
   target: {
     required: false,
-    description: "目标目录"
-  },
-  report: {
-    type: "boolean",
-    required: false,
-    default: false,
-    describe: "仅输出报告"
+    description: "目标目录(不指定目标目录仅打印报告)"
   },
   output: {
     type: "string",
@@ -33,8 +27,14 @@ export const builder: { [key: string]: Options } = {
     default: false,
     describe: "是否输出详细日志"
   },
+  showRepeatName: {
+    type: "boolean",
+    required: false,
+    default: false,
+    describe: "是否报告文件名重复的文件"
+  }
 };
-export const handler = function (argv: { source: string, target: string, report: boolean, output: string, verbose: boolean }) {
+export const handler = function (argv: { source: string, target: string, output: string, verbose: boolean, showRepeatName: boolean }) {
   const Terminal = typeof argv.output === "string" && argv.output.length ? new TerminalColor(argv.output) : new TerminalColor();
   argv.verbose && Terminal.writeln("输入参数: ").writeln(JSON.stringify(argv, null, "  "));
 
@@ -80,7 +80,12 @@ export const handler = function (argv: { source: string, target: string, report:
       Terminal.writeln("No files").reset();
       return;
     }
-    if (argv.report) {
+    let onlyReport = false;
+    if (typeof argv.target !== "string" || argv.target.length === 0) {
+      onlyReport = true;
+    }
+
+    if (onlyReport) {
       /**
        * 仅打印重复文件报告
        */
@@ -97,36 +102,32 @@ export const handler = function (argv: { source: string, target: string, report:
           .writeln(`${repeatdFiles.map(f => f.relative || f.path).join("\n  ")}`);
       }
 
-      Terminal.newline().writeln(`文件名重复 ${Array.from(filesKeyByName.values()).filter(f => f.length > 1).length}: `);
-      for (let [name, repeatdFiles] of filesKeyByName) {
-        if (repeatdFiles.length === 1) {
-          argv.verbose && Terminal.writeln(`[${name}] ${repeatdFiles[0].path} 没有重复`)
-          continue;
+      if (argv.showRepeatName) {
+        Terminal.newline().writeln(`文件名重复 ${Array.from(filesKeyByName.values()).filter(f => f.length > 1).length}: `);
+        for (let [name, repeatdFiles] of filesKeyByName) {
+          if (repeatdFiles.length === 1) {
+            argv.verbose && Terminal.writeln(`[${name}] ${repeatdFiles[0].path} 没有重复`)
+            continue;
+          }
+          Terminal.newline()
+            .writeln(`${name} - ${repeatdFiles.length} `, COLOR_FOREGROUND.Yellow)
+            .reset()
+            .write("  ")
+            .writeln(`${repeatdFiles.map(f => f.relative || f.path).join("\n  ")}`);
         }
-        Terminal.newline()
-          .writeln(`${name} - ${repeatdFiles.length} `, COLOR_FOREGROUND.Yellow)
-          .reset()
-          .write("  ")
-          .writeln(`${repeatdFiles.map(f => f.relative || f.path).join("\n  ")}`);
       }
       return;
     }
-
-    Terminal.reset().writeln("开始根据报告拷贝文件...");
     /**
-     * 执行文件拷贝
-     */
-    if (typeof argv.target !== "string" || argv.target.length === 0) {
-      Terminal.writeln("target must be required", COLOR_FOREGROUND.Red);
-      return;
-    }
+      * 执行文件拷贝
+      */
+    Terminal.reset().writeln("开始根据报告拷贝文件...");
     if (!fs.existsSync(argv.target)) {
-      Terminal.writeln(`Create destination directory: ${argv.target} `, COLOR_FOREGROUND.Yellow);
+      Terminal.writeln(`创建目标目录 ${argv.target} `, COLOR_FOREGROUND.Yellow);
       fs.mkdirSync(argv.target, {
         recursive: true
       });
     }
-
 
     for (let [hash, repeatdFiles] of filesKeyByHash) {
       if (repeatdFiles.length === 0) {

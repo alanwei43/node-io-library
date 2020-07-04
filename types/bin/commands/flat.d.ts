@@ -7,7 +7,7 @@ export declare const builder: {
 export declare const handler: (argv: {
     source: string;
     target: string;
-    report: boolean;
     output: string;
     verbose: boolean;
+    showRepeatName: boolean;
 }) => void;

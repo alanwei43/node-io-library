@@ -1,13 +1,13 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Node IO library.",
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/bin/node-io.ts",
     "tree": "ts-node src/bin/node-io.ts tree src --hash --verbose",
     "tree:help": "ts-node src/bin/node-io.ts tree --help",
-    "flat": "ts-node src/bin/node-io.ts flat dist/ logs/ --report --output logs/flat.log --verbose",
+    "flat": "ts-node src/bin/node-io.ts flat dist/ --output logs/flat.log --verbose",
     "flat:copy": "ts-node src/bin/node-io.ts flat dist/ logs/ --output logs/flat.log --verbose",
     "flat:help": "ts-node src/bin/node-io.ts flat --help",
     "build": "tsc",
