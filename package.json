@@ -1,15 +1,16 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Node IO library.",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/bin/node-io.ts",
+    "start": "ts-node src/bin/node-io.ts --help",
     "tree": "ts-node src/bin/node-io.ts tree src --hash --verbose",
     "tree:help": "ts-node src/bin/node-io.ts tree --help",
     "flat": "ts-node src/bin/node-io.ts flat dist/ --output logs/flat.log --verbose",
     "flat:copy": "ts-node src/bin/node-io.ts flat dist/ logs/ --output logs/flat.log ",
     "flat:help": "ts-node src/bin/node-io.ts flat --help",
+    "hash": "ts-node src/bin/node-io.ts hash package.json",
     "build": "tsc",
     "pub": "tsc && npm publish --access public"
   },

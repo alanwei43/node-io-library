@@ -5,7 +5,7 @@ import fs from "fs";
 
 
 export const command = "flat [source] [target]";
-export const desc = "将source目录下的文件展开复制到target根目录下";
+export const desc = "将source目录下的文件复制到target根目录下";
 export const builder: { [key: string]: Options } = {
   source: {
     required: true,
