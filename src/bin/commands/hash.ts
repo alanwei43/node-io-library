@@ -13,6 +13,11 @@ export const builder: { [key: string]: Options } = {
     array: true,
     alias: "f"
   },
+  from: {
+    required: false,
+    type: "string",
+    describe: "包含文件列表的文件地址"
+  },
   chunkSize: {
     required: false,
     type: "number",
@@ -29,17 +34,25 @@ export const builder: { [key: string]: Options } = {
   }
 };
 
-export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean }) {
+export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean, from?: string }) {
   const allFiles = argv.files || [].filter(f => typeof f === "string" && f.length);
-  if (allFiles.length <= 0) {
-    Terminal.writeln("file/files参数不能同时为空", COLOR_FOREGROUND.Yellow).reset();
+  if (typeof argv.from === "string" && argv.from.length && fs.existsSync(argv.from)) {
+    const filesList = fs.readFileSync(argv.from, {
+      encoding: "utf-8"
+    }).split("\n")
+      .map(line => line.trim())
+    allFiles.splice(allFiles.length, 0, ...filesList);
+  }
+  const avaiableFiles = allFiles.filter(f => {
+    const pass = typeof f === "string" && f.length && fs.existsSync(f) && fs.statSync(f).isFile();
+    argv.verbose && Terminal.writeln(`${pass ? "通过" : "忽略"} [${f}]`, pass ? COLOR_FOREGROUND.Green : COLOR_FOREGROUND.Yellow).reset();
+    return pass;
+  });
+  if (avaiableFiles.length <= 0) {
+    Terminal.writeln("没有有效的输入文件", COLOR_FOREGROUND.Yellow).reset();
     return;
   }
-  allFiles.forEach(file => {
-    if (!fs.existsSync(file)) {
-      Terminal.writeln(`文件 ${file} 不存在`, COLOR_FOREGROUND.Yellow).reset();
-      return;
-    }
+  avaiableFiles.forEach(file => {
     const fileName = path.basename(file);
 
     fileToHash(file, argv.chunkSize, "hex").on("progress", ({ currentSize, totalSize }) => {
