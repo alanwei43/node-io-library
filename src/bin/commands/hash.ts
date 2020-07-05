@@ -3,18 +3,13 @@ import { Options } from "yargs";
 import fs from "fs";
 import path from "path";
 
-export const command = "hash [file]";
+export const command = "hash [files]";
 export const desc = "计算指定文件的Hash值";
 export const builder: { [key: string]: Options } = {
-  file: {
-    required: false,
-    type: "string",
-    describe: "文件地址",
-  },
   files: {
     required: false,
     type: "array",
-    describe: "多个文件地址",
+    describe: "一个或多个文件地址",
     array: true
   },
   chunkSize: {
@@ -26,11 +21,12 @@ export const builder: { [key: string]: Options } = {
   verbose: {
     required: false,
     type: "boolean",
-    default: false
+    default: false,
+    describe: "是否显示进度"
   }
 };
-export const handler = function (argv: { file: string, files: Array<string>, chunkSize?: number, verbose?: boolean }) {
-  const allFiles = [argv.file, ...argv.files || []].filter(f => typeof f === "string" && f.length);
+export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean }) {
+  const allFiles = argv.files || [].filter(f => typeof f === "string" && f.length);
   if (allFiles.length <= 0) {
     Terminal.writeln("file/files参数不能同时为空", COLOR_FOREGROUND.Yellow).reset();
     return;
