@@ -1,5 +1,6 @@
-import { recursiveDir, humanSize, Terminal, COLOR_FOREGROUND, COLOR_BACKGROUND, hashFile } from "../../library";
+import { recursiveDir, humanSize, Terminal, COLOR_FOREGROUND, COLOR_BACKGROUND, hashFile, getColorPairs } from "../../library";
 import { Options } from "yargs";
+import path from "path";
 
 export const command = "tree [dir]";
 export const desc = "递归列出dir目录下文件";
@@ -35,9 +36,16 @@ export const builder: { [key: string]: Options } = {
     default: false,
     describe: "是否输出调试信息",
     alias: "v"
+  },
+  colorful: {
+    type: "boolean",
+    required: false,
+    default: false,
+    alias: "c",
+    describe: "是否使用不同颜色区分文件扩展名"
   }
 };
-export const handler = function (argv: { dir: string, recursive: boolean, fileFilter: string, dirFilter: string, hash: boolean, verbose: boolean }) {
+export const handler = function (argv: { dir: string, recursive?: boolean, fileFilter?: string, dirFilter?: string, hash?: boolean, verbose?: boolean, colorful?: boolean }) {
   argv.verbose && Terminal.writeln("输入参数: ")
     .writeln(JSON.stringify(argv, null, "  "), COLOR_FOREGROUND.Yellow)
     .newline()
@@ -77,11 +85,9 @@ export const handler = function (argv: { dir: string, recursive: boolean, fileFi
   })));
   promises.then(all => {
     all.forEach(({ file, hash }) => {
+      const colors = argv.colorful ? getColorPairs(path.extname(file.path).replace(".", "").length) : { fg: null, bg: null };
       Terminal
-        .write(hash ? `[${hash}] ` : null, COLOR_FOREGROUND.Green)
-        .reset()
-        .write(file.path)
-        .writeln(` (${humanSize(file.stat.size).join(" ")})`, COLOR_FOREGROUND.Green, COLOR_BACKGROUND.White)
+        .writeln(`${hash ? "[" + hash + "]" : ""} ${file.path} (${humanSize(file.stat.size).join(" ")})`, colors.fg, colors.bg)
         .reset();
     });
   })

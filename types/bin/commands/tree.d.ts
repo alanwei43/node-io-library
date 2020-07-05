@@ -6,9 +6,10 @@ export declare const builder: {
 };
 export declare const handler: (argv: {
     dir: string;
-    recursive: boolean;
-    fileFilter: string;
-    dirFilter: string;
-    hash: boolean;
-    verbose: boolean;
+    recursive?: boolean;
+    fileFilter?: string;
+    dirFilter?: string;
+    hash?: boolean;
+    verbose?: boolean;
+    colorful?: boolean;
 }) => void;

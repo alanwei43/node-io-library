@@ -28,6 +28,10 @@ export declare enum TEXT_STYLE {
     Inverse = 6,
     Hidden = 8
 }
+export declare function getColorPairs(num: number): {
+    fg: COLOR_FOREGROUND;
+    bg: COLOR_BACKGROUND;
+};
 export declare class TerminalColor {
     private _foreColor;
     private _bgColor;

@@ -40,6 +40,16 @@ export enum TEXT_STYLE {
   Hidden = 8
 }
 
+export function getColorPairs(num: number): { fg: COLOR_FOREGROUND, bg: COLOR_BACKGROUND } {
+  const left = num % 7;
+  const fg: COLOR_FOREGROUND = left + 31;
+  const bg: COLOR_BACKGROUND = 47 - left;
+  return {
+    fg: fg,
+    bg: bg
+  }
+}
+
 export class TerminalColor {
   private _foreColor: COLOR_FOREGROUND
   private _bgColor: COLOR_BACKGROUND

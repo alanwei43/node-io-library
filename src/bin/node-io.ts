@@ -15,6 +15,7 @@ yargs.commandDir("commands", {
   .example("find . > files && $0 hash --from files", "计算当前目录下所有文件Hash")
   .example("$0 tree ./", "递归当前目录所有文件")
   .example("$0 tree ./ --hash", "递归当前目录所有文件及其Hash")
+  .example("$0 tree ./ -c", "根据扩展名使用不同颜色输出")
   .example("$0 tree ./ --hash --file-filter 'js$'", "递归当前目录下所有js结尾文件及其Hash")
   .example("$0 flat ./", "递归打印当前目录所有重复文件")
   .example("$0 flat ./ --show-repeat-name", "递归当前目录所有内容和名称重复文件")
