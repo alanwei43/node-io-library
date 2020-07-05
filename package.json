@@ -1,6 +1,6 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Node IO library.",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,7 @@
     "flat:copy": "ts-node src/bin/node-io.ts flat dist/ logs/ --output logs/flat.log ",
     "flat:help": "ts-node src/bin/node-io.ts flat --help",
     "hash": "ts-node src/bin/node-io.ts hash package.json",
+    "hash:help": "ts-node src/bin/node-io.ts hash --help",
     "hash:mul": "ts-node src/bin/node-io.ts hash --files package.json tsconfig.json",
     "build": "tsc",
     "pub": "tsc && npm publish --access public"

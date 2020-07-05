@@ -28,6 +28,7 @@ export const builder: { [key: string]: Options } = {
     describe: "是否显示进度"
   }
 };
+
 export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean }) {
   const allFiles = argv.files || [].filter(f => typeof f === "string" && f.length);
   if (allFiles.length <= 0) {

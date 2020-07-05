@@ -116,3 +116,10 @@ export function expandFileInfo(fileOrDir: string, baseDir?: string): FilePathInf
   }
   return info;
 }
+
+export function readPkg(): { name: string, version: string } {
+  const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../..", "package.json"), {
+    encoding: "utf-8"
+  }));
+  return pkg;
+}

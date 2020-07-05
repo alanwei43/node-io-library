@@ -39,3 +39,7 @@ export interface FilePathInfo {
     relative?: string;
 }
 export declare function expandFileInfo(fileOrDir: string, baseDir?: string): FilePathInfo;
+export declare function readPkg(): {
+    name: string;
+    version: string;
+};
