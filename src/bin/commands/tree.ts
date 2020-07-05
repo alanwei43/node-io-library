@@ -14,12 +14,12 @@ export const builder: { [key: string]: Options } = {
     describe: "是否递归子目录",
     alias: "r"
   },
-  dirFilter: {
+  "dir-filter": {
     type: "string",
     required: false,
     describe: "目录过滤(正则表达式)"
   },
-  fileFilter: {
+  "file-filter": {
     type: "string",
     required: false,
     describe: "文件过滤(正则表达式)"

@@ -19,7 +19,7 @@ export const builder: { [key: string]: Options } = {
     type: "string",
     describe: "包含文件列表的文件地址"
   },
-  chunkSize: {
+  "chunk-size": {
     required: false,
     type: "number",
     describe: "每次读取的字节数",

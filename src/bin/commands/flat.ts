@@ -29,7 +29,7 @@ export const builder: { [key: string]: Options } = {
     describe: "是否输出详细日志",
     alias: "v"
   },
-  showRepeatName: {
+  "show-repeat-name": {
     type: "boolean",
     required: false,
     default: false,
