@@ -19,13 +19,15 @@ export const builder: { [key: string]: Options } = {
     type: "string",
     required: false,
     default: false,
-    describe: "报告文件输出地址"
+    describe: "报告文件输出地址",
+    alias: "o"
   },
   verbose: {
     type: "boolean",
     required: false,
     default: false,
-    describe: "是否输出详细日志"
+    describe: "是否输出详细日志",
+    alias: "v"
   },
   showRepeatName: {
     type: "boolean",

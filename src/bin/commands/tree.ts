@@ -11,7 +11,8 @@ export const builder: { [key: string]: Options } = {
   recursive: {
     type: "boolean",
     default: true,
-    describe: "是否递归子目录"
+    describe: "是否递归子目录",
+    alias: "r"
   },
   dirFilter: {
     type: "string",
@@ -32,7 +33,8 @@ export const builder: { [key: string]: Options } = {
     type: "boolean",
     required: false,
     default: false,
-    describe: "是否输出调试信息"
+    describe: "是否输出调试信息",
+    alias: "v"
   }
 };
 export const handler = function (argv: { dir: string, recursive: boolean, fileFilter: string, dirFilter: string, hash: boolean, verbose: boolean }) {

@@ -10,18 +10,21 @@ export const builder: { [key: string]: Options } = {
     required: false,
     type: "array",
     describe: "一个或多个文件地址",
-    array: true
+    array: true,
+    alias: "f"
   },
   chunkSize: {
     required: false,
     type: "number",
     describe: "每次读取的字节数",
-    default: 1024 * 1024 * 100
+    default: 1024 * 1024 * 100,
+    alias: "s"
   },
   verbose: {
     required: false,
     type: "boolean",
     default: false,
+    alias: "v",
     describe: "是否显示进度"
   }
 };
