@@ -11,6 +11,7 @@ yargs.commandDir("commands", {
   .help("help", "显示帮助")
   .example("$0 hash file1", "计算文件file1的Hash值")
   .example("$0 hash -f file1 file2", "计算文件file1和file2的Hash值")
+  .example("$0 hash --text 'Hello world.'", "计算文本的Hash值")
   .example("find . > files && $0 hash --from files", "计算当前目录下所有文件Hash")
   .example("$0 tree ./", "递归当前目录所有文件")
   .example("$0 tree ./ --hash", "递归当前目录所有文件及其Hash")
