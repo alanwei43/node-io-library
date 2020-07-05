@@ -25,7 +25,7 @@ export const builder: { [key: string]: Options } = {
   }
 };
 export const handler = function (argv: { file: string, files: Array<string>, chunkSize?: number }) {
-  const allFiles = [argv.file, ...argv.files];
+  const allFiles = [argv.file, ...argv.files || []].filter(f => typeof f === "string" && f.length);
   if (allFiles.length <= 0) {
     Terminal.writeln("file/files参数不能同时为空", COLOR_FOREGROUND.Yellow).reset();
     return;
