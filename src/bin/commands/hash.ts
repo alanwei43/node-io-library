@@ -1,7 +1,8 @@
-import { Terminal, COLOR_FOREGROUND, hashFile, fileToHash, humanSize } from "../../library";
+import { Terminal, COLOR_FOREGROUND, fileToHash, humanSize } from "../../library";
 import { Options } from "yargs";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 
 export const command = "hash [files]";
 export const desc = "计算指定文件的Hash值";
@@ -25,6 +26,11 @@ export const builder: { [key: string]: Options } = {
     default: 1024 * 1024 * 100,
     alias: "s"
   },
+  text: {
+    required: false,
+    type: "string",
+    describe: "计算文本的Hash"
+  },
   verbose: {
     required: false,
     type: "boolean",
@@ -34,7 +40,14 @@ export const builder: { [key: string]: Options } = {
   }
 };
 
-export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean, from?: string }) {
+export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean, from?: string, text?: string }) {
+  if (typeof argv.text === "string" && argv.text.length) {
+    const md5 = crypto.createHash("md5");
+    const hash = md5.update(argv.text, "utf8").digest("hex");
+    Terminal.writeln(argv.text).writeln(hash, COLOR_FOREGROUND.Green).reset();
+    return;
+  }
+
   const allFiles = argv.files || [].filter(f => typeof f === "string" && f.length);
   if (typeof argv.from === "string" && argv.from.length && fs.existsSync(argv.from)) {
     const filesList = fs.readFileSync(argv.from, {

@@ -8,6 +8,10 @@ export interface HashFileOptions {
   chunkSize?: number
 }
 
+export function calculateHash() {
+  const md5 = crypto.createHash("md5");
+}
+
 export function fileToHash(filePath: string, chunkSize: number, digestEncode: crypto.HexBase64Latin1Encoding): EventEmitter {
   const hub = new EventEmitter();
   const md5 = crypto.createHash("md5");

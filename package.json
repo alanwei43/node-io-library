@@ -1,6 +1,6 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Node IO library.",
   "main": "index.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "hash:from": "find ./src > logs/files-list.log && ts-node src/bin/node-io.ts hash --from logs/files-list.log",
     "hash:help": "ts-node src/bin/node-io.ts hash --help",
     "hash:mul": "ts-node src/bin/node-io.ts hash --files package.json tsconfig.json",
+    "hash:text": "ts-node src/bin/node-io.ts hash --text 'Hello world.'",
     "build": "tsc",
     "pub": "tsc && npm publish --access public"
   },

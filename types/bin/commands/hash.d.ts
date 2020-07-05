@@ -9,4 +9,5 @@ export declare const handler: (argv: {
     chunkSize?: number;
     verbose?: boolean;
     from?: string;
+    text?: string;
 }) => void;
