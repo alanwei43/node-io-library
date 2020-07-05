@@ -1,6 +1,6 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Node IO library.",
   "main": "index.js",
   "scripts": {

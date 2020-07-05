@@ -22,9 +22,14 @@ export const builder: { [key: string]: Options } = {
     type: "number",
     describe: "每次读取的字节数",
     default: 1024 * 1024 * 100
+  },
+  verbose: {
+    required: false,
+    type: "boolean",
+    default: false
   }
 };
-export const handler = function (argv: { file: string, files: Array<string>, chunkSize?: number }) {
+export const handler = function (argv: { file: string, files: Array<string>, chunkSize?: number, verbose?: boolean }) {
   const allFiles = [argv.file, ...argv.files || []].filter(f => typeof f === "string" && f.length);
   if (allFiles.length <= 0) {
     Terminal.writeln("file/files参数不能同时为空", COLOR_FOREGROUND.Yellow).reset();
@@ -37,9 +42,8 @@ export const handler = function (argv: { file: string, files: Array<string>, chu
     }
     const fileName = path.basename(file);
 
-    Terminal.newline().writeln(`[${fileName}] 计算Hash `).reset();
     fileToHash(file, argv.chunkSize, "hex").on("progress", ({ currentSize, totalSize }) => {
-      Terminal.writeln(`[${fileName}] ${(currentSize / totalSize).toFixed(2)} ${humanSize(currentSize).join("")}`);
+      argv.verbose && Terminal.writeln(`[${fileName}] ${(currentSize / totalSize).toFixed(2)} ${humanSize(currentSize).join("")}`);
     }).on("end", hash => {
       Terminal.write(`[${fileName}] `)
         .writeln(hash, COLOR_FOREGROUND.Green)

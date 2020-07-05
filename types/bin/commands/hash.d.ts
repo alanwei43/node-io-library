@@ -8,4 +8,5 @@ export declare const handler: (argv: {
     file: string;
     files: Array<string>;
     chunkSize?: number;
+    verbose?: boolean;
 }) => void;
