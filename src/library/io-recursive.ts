@@ -1,6 +1,5 @@
 import path from "path";
 import fs from "fs";
-import { promisify } from "util";
 
 export interface FileInfo {
   /**

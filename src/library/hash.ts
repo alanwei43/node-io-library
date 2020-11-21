@@ -2,15 +2,12 @@ import crypto from "crypto";
 import fs from "fs";
 import { promisify } from "util";
 import { EventEmitter } from "events";
-import { RecursiveOptions, recursiveDir } from "./io-recursive";
+import { RecursiveOptions, recursiveDir, FileInfo } from "./io-recursive";
 
 export interface HashFileOptions {
   chunkSize?: number
 }
 
-export function calculateHash() {
-  const md5 = crypto.createHash("md5");
-}
 
 export function fileToHash(filePath: string, chunkSize: number, digestEncode: crypto.HexBase64Latin1Encoding): EventEmitter {
   const hub = new EventEmitter();
@@ -44,7 +41,11 @@ export function hashFile(filePath: string, options?: HashFileOptions): Promise<s
   }).catch(() => null);
 }
 
-export function hashFiles(dir: string, options: { hash?: HashFileOptions, recursive?: RecursiveOptions }): EventEmitter {
+export function hashFiles(dir: string, options: {
+  hash?: HashFileOptions,
+  recursive?: RecursiveOptions,
+  callback?: (file: FileInfo, hash: string) => Promise<void>
+}): EventEmitter {
   const hub = new EventEmitter();
   recursiveDir(dir, options?.recursive)
     .filter(file => file.stat.isFile())
@@ -55,12 +56,14 @@ export function hashFiles(dir: string, options: { hash?: HashFileOptions, recurs
           const data = { file: file, hash: hashVal };
           hub.emit("log", { status: "hashed", ...data });
           hub.emit("data", data);
+          if (typeof options?.callback === "function") {
+            return options.callback(file, hashVal);
+          }
         });
       });
-    }, Promise.resolve()).then(() => {
-      hub.emit("log", {
-        status: "all_end"
-      })
+    }, Promise.resolve()).catch(err => {
+      hub.emit("error", err);
+    }).then(() => {
       hub.emit("end");
     });
 

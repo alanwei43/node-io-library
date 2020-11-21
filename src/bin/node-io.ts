@@ -17,7 +17,10 @@ yargs.commandDir("commands", {
   .example("$0 tree ./ --hash", "递归当前目录所有文件及其Hash")
   .example("$0 tree ./ -c", "根据扩展名使用不同颜色输出")
   .example("$0 tree ./ --hash --file-filter 'js$'", "递归当前目录下所有js结尾文件及其Hash")
-  .example("$0 flat ./", "递归打印当前目录所有重复文件")
-  .example("$0 flat ./ --show-repeat-name", "递归当前目录所有内容和名称重复文件")
-  .example("$0 flat src/ target/", "将src及其子目录下的所有文件复制到target根目录下并忽略重复文件")
+  .example("$0 tidy ./", "递归打印当前目录所有重复文件")
+  .example("$0 tidy ./ --show-repeat-name", "递归当前目录所有内容和名称重复文件")
+  .example("$0 tidy src/ target/", "将src及其子目录下的所有文件复制到target根目录下并忽略重复文件")
+  .example("$0 tidy src/ --delete-repeat true", "手动确认删除src及其子目录下重复文件")
+  .example("$0 tidy src/ --delete-repeat auto", "自动删除src及其子目录下重复文件")
+  .example(`$0 rm src/ -f "\\.js$" -r`, "删除src目录及其子目录下js文件")
   .argv;

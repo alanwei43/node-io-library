@@ -1,23 +1,24 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.0.18",
+  "version": "0.1.0",
   "description": "Node IO library.",
-  "main": "index.js",
+  "main": "dist/library/index.js",
   "scripts": {
     "start": "ts-node src/bin/node-io.ts --help",
-
     "tree": "ts-node src/bin/node-io.ts tree",
     "tree:src": "ts-node src/bin/node-io.ts tree src --hash --verbose",
     "tree:help": "ts-node src/bin/node-io.ts tree --help",
-
-    "flat": "ts-node src/bin/node-io.ts flat dist/ --output logs/flat.log --verbose",
-    "flat:copy": "ts-node src/bin/node-io.ts flat dist/ logs/ --output logs/flat.log ",
-    "flat:help": "ts-node src/bin/node-io.ts flat --help",
+    "tidy": "ts-node src/bin/node-io.ts tidy ",
+    "tidy:copy": "ts-node src/bin/node-io.ts tidy dist/ logs/ --output logs/flat.log ",
+    "tidy:help": "ts-node src/bin/node-io.ts tidy --help",
     "hash": "ts-node src/bin/node-io.ts hash package.json",
     "hash:from": "find ./src > logs/files-list.log && ts-node src/bin/node-io.ts hash --from logs/files-list.log",
     "hash:help": "ts-node src/bin/node-io.ts hash --help",
     "hash:mul": "ts-node src/bin/node-io.ts hash --files package.json tsconfig.json",
     "hash:text": "ts-node src/bin/node-io.ts hash --text 'Hello world.'",
+    "rm": "ts-node src/bin/node-io.ts rm ",
+    "copy": "ts-node src/bin/node-io.ts copy ",
+    "help": "ts-node src/bin/node-io.ts --help ",
     "build": "tsc",
     "pub": "tsc && npm publish --access public"
   },
@@ -36,13 +37,14 @@
   },
   "homepage": "https://github.com/alanwei43/node-io-library#readme",
   "dependencies": {
+    "colors": "^1.4.0",
     "yargs": "15.3.1"
   },
   "devDependencies": {
-    "@types/node": "11.11.4",
+    "@types/node": "14.14.8",
     "@types/yargs": "15.0.4",
     "ts-node": "8.0.3",
     "ts-node-dev": "1.0.0-pre.32",
-    "typescript": "3.3.4000"
+    "typescript": "4.0.5"
   }
 }
