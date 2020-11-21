@@ -8,6 +8,7 @@ export declare const handler: (argv: {
     src: string;
     target: string;
     filter?: string;
+    replace?: string;
     recursive?: boolean;
     verbose?: boolean;
 }) => void;
