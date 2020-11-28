@@ -109,7 +109,7 @@ export const handler = function (argv: {
       }
       return new Promise(resolve => {
         rl.question(`是否删除文件 ${next.path} (输入yes或y确认删除)?\n`, answer => {
-          (answer + "").trim() === "yes" ? rm(next.path).then(() => resolve()) : resolve();
+          (answer + "").trim() === "yes" || (answer + "").trim() === "y" ? rm(next.path).then(() => resolve()) : resolve();
         });
       });
     }), Promise.resolve())

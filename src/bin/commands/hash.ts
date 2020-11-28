@@ -74,6 +74,7 @@ export const handler = function (argv: { files: Array<string>, chunkSize?: numbe
       Terminal.write(`[${fileName}] `)
         .writeln(hash, COLOR_FOREGROUND.Green)
         .reset();
+        process.exit();
     });
   });
 }

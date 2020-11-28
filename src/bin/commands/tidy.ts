@@ -63,7 +63,7 @@ export const handler = function (argv: {
   argv.verbose && Terminal.writeln("输入参数: ").writeln(JSON.stringify(argv, null, "  "));
 
   if (typeof argv.source !== "string" || argv.source.length === 0 || !fs.existsSync(argv.source)) {
-    Terminal.writeln(`参数 source 不能为空, 且目录${argv.source}必须存在`, COLOR_FOREGROUND.Red);
+    Terminal.writeln(`参数 source 不能为空, 或目录${argv.source}必须存在`, COLOR_FOREGROUND.Red);
     return;
   }
 

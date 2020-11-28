@@ -90,6 +90,7 @@ export const handler = function (argv: { dir: string, recursive?: boolean, fileF
         .writeln(`${hash ? "[" + hash + "]" : ""} ${file.path} (${humanSize(file.stat.size).join(" ")})`, colors.fg, colors.bg)
         .reset();
     });
-  })
+    process.exit();
+  });
 
 }
