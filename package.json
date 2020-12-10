@@ -1,6 +1,6 @@
 {
   "name": "@js-core/node-io-library",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Node IO library.",
   "main": "dist/library/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "hash:help": "ts-node src/bin/node-io.ts hash --help",
     "hash:mul": "ts-node src/bin/node-io.ts hash --files package.json tsconfig.json",
     "hash:text": "ts-node src/bin/node-io.ts hash --text 'Hello world.'",
+    "base64": "ts-node src/bin/node-io.ts base64",
     "rm": "ts-node src/bin/node-io.ts rm ",
     "copy": "ts-node src/bin/node-io.ts copy ",
     "help": "ts-node src/bin/node-io.ts --help ",
