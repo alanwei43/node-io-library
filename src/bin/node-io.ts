@@ -23,4 +23,8 @@ yargs.commandDir("commands", {
   .example("$0 tidy src/ --delete-repeat true", "手动确认删除src及其子目录下重复文件")
   .example("$0 tidy src/ --delete-repeat auto", "自动删除src及其子目录下重复文件")
   .example(`$0 rm src/ -f "\\.js$" -r`, "删除src目录及其子目录下js文件")
+  .example("$0 base64 ./hello.png", "将文件内容进行base64编码")
+  .example("$0 base64 ./hello.png --html-image-prefix", "将文件编码成img标签使用的内容")
+  .example("$0 base64 ./hello.base64 --decode", "将文件内容进行base64解码")
+  .example("$0 base64 --text 'Hello'", "输出Hello的base64编码")
   .argv;

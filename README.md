@@ -23,4 +23,13 @@ node-io tidy src/ dest/
 
 # 仅仅打印文件内容重复和文件名重复报告, 不执行拷贝
 node-io tidy src/ --report
+
+# 将文件内容进行base64编码
+node-io base64 ./hello.png
+# 将文件编码成img标签使用的内容
+node-io base64 ./hello.png --html-image-prefix
+# 将文件内容进行base64解码
+node-io base64 ./hello.base64 --decode
+# 输出Hello的base64编码
+node-io base64 --text 'Hello'
 ```
