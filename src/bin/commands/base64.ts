@@ -1,14 +1,7 @@
-import { recursiveDir, Terminal, COLOR_FOREGROUND, hashFile, expandFileInfo } from "../../library";
-import { boolean, Options, string } from "yargs";
+import { Terminal, COLOR_FOREGROUND } from "../../library";
+import { Options } from "yargs";
 import path from "path";
 import fs from "fs";
-import { promisify } from "util";
-import { pipeline } from "stream";
-
-/**
- * base64 --file ./hello.png --target ./base64.txt 
- * base64 --file ./base64.txt --target ./hello.png --decode
- */
 
 export const command = "base64 [file]";
 export const desc = "将文件转成base64";

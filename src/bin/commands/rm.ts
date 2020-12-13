@@ -18,7 +18,6 @@ export const builder: { [key: string]: Options } = {
   },
   filter: {
     type: "string",
-    demandOption: true,
     describe: "文件名过滤规则",
     alias: "f"
   },
@@ -34,7 +33,7 @@ export const builder: { [key: string]: Options } = {
     default: false,
     describe: "是否自动删除"
   },
-  print: {
+  test: {
     type: "boolean",
     demandOption: false,
     default: false,
@@ -42,7 +41,7 @@ export const builder: { [key: string]: Options } = {
   },
   recursive: {
     type: "boolean",
-    default: false,
+    default: true,
     describe: "是否递归子目录",
     alias: "r"
   },
@@ -59,7 +58,7 @@ export const handler = function (argv: {
   filter?: string,
   filterType?: "reg" | "fn",
   force?: boolean,
-  print?: boolean,
+  test?: boolean,
   recursive?: boolean,
   verbose?: boolean,
 }) {
@@ -75,11 +74,7 @@ export const handler = function (argv: {
     .newline()
     .reset();
 
-  if (typeof argv.filter !== "string" || argv.filter.length <= 0) {
-    Terminal.color(COLOR_FOREGROUND.Red).writeln("filter参数必须是有效的字符串");
-    return;
-  }
-  if (!["fn", "reg"].includes(argv.filterType)) {
+  if (argv.filterType && !["fn", "reg"].includes(argv.filterType)) {
     Terminal.color(COLOR_FOREGROUND.Red).writeln("--filter-type 参数必须是fn或者reg");
     return;
   }
@@ -88,17 +83,19 @@ export const handler = function (argv: {
     recursive: argv.recursive,
     fileFilter: f => {
       const fileName = expandFileInfo(f).name;
-      if (argv.filterType === "reg") {
-        return new RegExp(argv.filter, "gi").test(fileName);
+      if (argv.filter) {
+        if (argv.filterType === "reg") {
+          return new RegExp(argv.filter, "gi").test(fileName);
+        }
+        if (argv.filterType === "fn") {
+          return !!new Function(argv.filter).apply(fileName);
+        }
       }
-      if (argv.filterType === "fn") {
-        return !!new Function(argv.filter).apply(fileName);
-      }
-      return false;
+      return true;
     }
   }).filter(item => item.stat.isFile())
     .reduce((prev, next) => prev.then(() => {
-      if (argv.print) {
+      if (argv.test) {
         Terminal.color(COLOR_FOREGROUND.Green).writeln(`匹配到文件 ${next.path}`).reset();
         return;
       }

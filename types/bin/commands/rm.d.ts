@@ -9,7 +9,7 @@ export declare const handler: (argv: {
     filter?: string;
     filterType?: "reg" | "fn";
     force?: boolean;
-    print?: boolean;
+    test?: boolean;
     recursive?: boolean;
     verbose?: boolean;
 }) => void;
