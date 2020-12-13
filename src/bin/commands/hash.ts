@@ -42,10 +42,11 @@ export const builder: { [key: string]: Options } = {
 
 export const handler = function (argv: { files: Array<string>, chunkSize?: number, verbose?: boolean, from?: string, text?: string }) {
   if (typeof argv.text === "string" && argv.text.length) {
+    // 计算输入文本的hash
     const md5 = crypto.createHash("md5");
     const hash = md5.update(argv.text, "utf8").digest("hex");
     Terminal.writeln(argv.text).writeln(hash, COLOR_FOREGROUND.Green).reset();
-    return;
+    process.exit();
   }
 
   const allFiles = argv.files || [].filter(f => typeof f === "string" && f.length);
@@ -63,7 +64,7 @@ export const handler = function (argv: { files: Array<string>, chunkSize?: numbe
   });
   if (avaiableFiles.length <= 0) {
     Terminal.writeln("没有有效的输入文件", COLOR_FOREGROUND.Yellow).reset();
-    return;
+    process.exit();
   }
   avaiableFiles.forEach(file => {
     const fileName = path.basename(file);
