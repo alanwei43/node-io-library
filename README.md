@@ -1,6 +1,4 @@
-# Node IO 
-
-Node IO 相关命令
+# 本项目迁移至 https://github.com/alanwei43/node-io-lib
 
 ## 安装
 
